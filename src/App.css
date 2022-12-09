@@ -1,38 +1,64 @@
-.App {
-  text-align: center;
+body {
+  background-color: beige;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.app {
+  min-height: 300px;
+  min-height: 300px;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.todo-app {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  border: 1px solid black;
+  margin-top: 150px;
+  background-color: white;
+  border-radius: 1rem;
+  min-height: 200px;
+  min-width: 350px;
+}
+h1 {
+  display: flex;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: center;
 }
-
-.App-link {
-  color: #61dafb;
+.contenedor-formulario {
+  display: flex;
+  margin-top: 50px;
+  margin-bottom: 15px;
+  margin-right: 6px;
+  justify-content: center;
+  align-items: center;
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.contenedor-input {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  min-width: 600px;
+}
+p {
+  min-width: 175px;
+  padding-left: 25px;
+  padding-right: 25px;
+  font-size: 20px;
+}
+button:hover {
+  background-color: aqua;
+}
+button {
+  cursor: pointer;
+  width: 65px;
+  height: 30px;
+  border-radius: 5px;
+}
+input {
+}
+.texto {
+  min-height: 25px;
+  min-width: 250px;
+  border-radius: 7px;
+  margin-right: 3px;
 }

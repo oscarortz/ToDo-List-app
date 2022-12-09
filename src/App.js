@@ -20,6 +20,7 @@ function Formulario({ tareaAñadida }) {
     <Fragment>
       <form>
         <input
+          className="texto"
           type="text"
           placeholder="escribe tu tarea"
           name="tarea"
@@ -44,7 +45,7 @@ const ToDoItem = ({ item, checkboxClicked, eraseTask }) => {
   //console.log(item);
 
   return (
-    <>
+    <div className="contenedor-input">
       <input
         type="checkbox"
         checked={item.estado === "COMPLETO"}
@@ -55,7 +56,7 @@ const ToDoItem = ({ item, checkboxClicked, eraseTask }) => {
       <div>
         <button onClick={eraseTask}>Borrar</button>
       </div>
-    </>
+    </div>
   );
 };
 
@@ -113,19 +114,23 @@ const ToDoList = () => {
 
   return (
     <>
-      <>
+      <div className="todo-app">
         <h1>Mi lista </h1>
-        {list.map((item) => (
-          <ToDoItem
-            item={item}
-            key={item.id}
-            checkboxClicked={() => handleCheckboxClick(item.descripcion)}
-            eraseTask={() => handleEraseTask(item.id)}
-          />
-        ))}
 
-        <Formulario tareaAñadida={(tarea) => handleAddItem(tarea)} />
-      </>
+        <div className="list">
+          {list.map((item) => (
+            <ToDoItem
+              item={item}
+              key={item.id}
+              checkboxClicked={() => handleCheckboxClick(item.descripcion)}
+              eraseTask={() => handleEraseTask(item.id)}
+            />
+          ))}
+        </div>
+        <div class="contenedor-formulario">
+          <Formulario tareaAñadida={(tarea) => handleAddItem(tarea)} />
+        </div>
+      </div>
     </>
   );
 };
