@@ -1,43 +1,36 @@
-import { useState, Fragment } from "react";
+import { useState } from "react";
 import "./App.css";
-import { v4 as uuidv4 } from "uuid";
+import { v1 as uuidv1 } from "uuid";
 
-function Formulario({ tareaAñadida }) {
-  const [tarea, setTarea] = useState({
-    id: crypto.randomUUID(),
-    descripcion: "",
-    estado: "INCOMPLETO",
-  });
+import React from "react";
 
-  const handleEvent = (evento) => {
-    setTarea({
-      ...tarea,
-      descripcion: evento.target.value,
-    });
+function TareaNueva({ addTodo }) {
+  const [newTarea, setNewTarea] = useState("");
+
+  const handleOnchange = (e) => {
+    setNewTarea(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (newTarea.trim() !== "") {
+      addTodo(newTarea);
+      setNewTarea("");
+    }
   };
 
   return (
-    <Fragment>
-      <form>
+    <div>
+      <form onSubmit={handleSubmit}>
         <input
-          className="texto"
           type="text"
-          placeholder="escribe tu tarea"
-          name="tarea"
-          onChange={handleEvent}
+          value={newTarea}
+          onChange={handleOnchange}
+          placeholder="Escribe aqui tu tarea"
         />
-        <button
-          onClick={() => tareaAñadida(tarea)}
-          type="button"
-          value="enviando"
-        >
-          Enviar
-        </button>
-        {/* <button type="button" onClick={eraseTask}>
-          Borrar
-        </button> */}
+        <button>Agregar</button>
       </form>
-    </Fragment>
+    </div>
   );
 }
 
@@ -46,92 +39,76 @@ const ToDoItem = ({ item, checkboxClicked, eraseTask }) => {
 
   return (
     <div className="contenedor-input">
-      <input
-        type="checkbox"
-        checked={item.estado === "COMPLETO"}
-        onChange={checkboxClicked}
-      />
+      <label htmlFor={item.descripcion}>
+        <input
+          type="checkbox"
+          checked={item.estado === true}
+          onChange={() => checkboxClicked(item.id)}
+          name={item.descripcion}
+        />
+      </label>
 
       <p>{item.descripcion}</p>
       <div>
-        <button onClick={eraseTask}>Borrar</button>
+        <button onClick={() => eraseTask(item.id)}>Borrar</button>
       </div>
     </div>
   );
 };
 
 const listData = [
-  { id: uuidv4(), descripcion: "comida de perro", estado: "COMPLETO" },
-  { id: uuidv4(), descripcion: "Regar plantas", estado: "INCOMPLETO" },
-  { id: uuidv4(), descripcion: "Cortar plantas", estado: "COMPLETO" },
+  { id: 1, descripcion: "comida de perro", estado: true },
+  { id: 2, descripcion: "Regar plantas", estado: false },
+  { id: 3, descripcion: "Cortar plantas", estado: true },
 ];
 
 const ToDoList = () => {
   const [list, setList] = useState(listData);
+  const [mensaje, setMensaje] = useState(false);
 
-  const handleAddItem = (tarea) => {
-    const newList = [...list];
-    newList.unshift(tarea);
-    setList(newList);
-    //agregar tarea a lista y actualizar estado
+  const addTodo = (newTodo) => {
+    let newItem = {
+      id: +new Date(),
+      descripcion: newTodo,
+      estado: false,
+    };
+    setList([...list, newItem]);
   };
 
-  function handleEraseTask(id) {
-    const temporal = list.filter((item) => item.id !== id);
-    setList(temporal);
-  }
+  //agregar tarea a lista y actualizar estado
 
-  const handleCheckboxClick = (descripcion) => {
-    //Encontramos nuestro item en la lista
-    const itemClicked = [...list].filter(
-      (item) => item.descripcion === descripcion
+  const eraseTask = (id) => {
+    console.log(id);
+    setList([...list].filter((item) => item.id !== id));
+  };
+
+  const handleCheckboxClick = (id) => {
+    console.log(id);
+    setList(
+      list.map((item) => {
+        return item.id === Number(id)
+          ? { ...item, estado: !item.estado }
+          : { ...item };
+      })
     );
-
-    const newItem = itemClicked[0];
-    //{ descripcion: "comida de perro", estado: "COMPLETO" },
-    //Modificamos el item
-    const newEstado =
-      itemClicked[0].estado === "COMPLETO" ? "INCOMPLETO" : "COMPLETO";
-    //{ descripcion: "comida de perro", estado: "INCOMPLETO" },
-    //Encontramos el index del item en la lista
-    const indexOfItem = [...list].findIndex(
-      (i) => i.descripcion === descripcion
-    );
-
-    const newList = [...list];
-    console.log(newList);
-
-    //Modificamos nuestra lista
-    newList.splice(indexOfItem, 1, {
-      ...newItem,
-      estado: newEstado,
-    });
-
-    //React
-    //Actualizamos el estado con la nueva lista
-    setList(newList);
   };
 
   return (
-    <>
-      <div className="todo-app">
-        <h1>Mi lista </h1>
-
-        <div className="list">
-          {list.map((item) => (
-            <ToDoItem
-              item={item}
-              key={item.id}
-              checkboxClicked={() => handleCheckboxClick(item.descripcion)}
-              eraseTask={() => handleEraseTask(item.id)}
-            />
-          ))}
-        </div>
-        <div class="contenedor-formulario">
-          <Formulario tareaAñadida={(tarea) => handleAddItem(tarea)} />
-        </div>
+    <div className="todo-app">
+      <h1>Mi lista </h1>
+      {list.length === 0 ? "Aun no tienes tareas, Agrega una tarea" : ""}
+      <div className="list">
+        {list.map((item, index) => (
+          <ToDoItem
+            item={item}
+            key={index}
+            checkboxClicked={handleCheckboxClick}
+            eraseTask={eraseTask}
+          />
+        ))}
       </div>
-    </>
+      <TareaNueva addTodo={addTodo} />
+    </div>
   );
 };
 function App() {
